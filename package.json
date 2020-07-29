@@ -7,8 +7,8 @@
     "md2article": "index.js"
   },
   "scripts": {
-    "start": "node index.js -t 123",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "pub": "npm publish"
   },
   "repository": {
     "type": "git",

@@ -44,6 +44,8 @@ init();
 
 const originPath = path.join(process.cwd(), program.origin);
 const targetPath = path.join(process.cwd(), program.target);
+console.log('originPath', originPath);
+console.log('targetPath', targetPath);
 
 const readFiles = klawSync(originPath, {
   nodir: true,
