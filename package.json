@@ -1,0 +1,29 @@
+{
+  "name": "md2article",
+  "version": "1.0.0",
+  "description": "把类似hugo或hexo等Markdown文件转化为，GitHub或社交平台发布的Markdown文章",
+  "main": "index.js",
+  "bin": {
+    "md2article": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js -t 123",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dun-cat/md2article.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dun-cat/md2article/issues"
+  },
+  "homepage": "https://github.com/dun-cat/md2article#readme",
+  "dependencies": {
+    "commander": "^6.0.0",
+    "front-matter": "^4.0.2",
+    "fs-extra": "^9.0.1",
+    "klaw-sync": "^6.0.0"
+  }
+}
