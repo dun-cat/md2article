@@ -77,12 +77,17 @@ function createReadMeFile(targetPath) {
     catalogue['未分类'] = uncategorized;
     keys.push('未分类');
   }
-  keys.forEach(ca => {
-    cats += `### [${ca}](#${ca})\n`;
+  keys.forEach((ca, i) => {
+    if (i === keys.length - 1) {
+      cats += `[${ca}](#${ca})\n`;
+    } else {
+      cats += `[${ca}](#${ca}) | `;
+    }
+
     let titles = '';
 
     catalogue[ca].forEach(title => {
-      titles += `* #### [${title}](./${title}.md)\n`;
+      titles += `* #### [${title}](./${encodeURIComponent(title)}.md)\n`;
     });
     // 添加锚点目标分类 和 文章标题
     allTitle += `### ${ca}\n` + titles;
@@ -92,6 +97,7 @@ function createReadMeFile(targetPath) {
   fse.writeFileSync(readmePath, readmeContent);
 }
 
+// -----------------------------------------------------------
 // 初始化
 init();
 
