@@ -6,6 +6,9 @@ const klawSync = require('klaw-sync');
 const path = require('path');
 const fm = require('front-matter');
 
+const catalogue = {};
+const uncategorized = [];
+
 /**
  * 初始化接收命令参数
  */
@@ -31,6 +34,8 @@ function convert(filePath, target) {
       outTitle = attributes.title;
       outBody = `## ${attributes.title} \n` + body;
     }
+
+    addTitleToCategory(attributes);
     const outFilePath = `${target}/${outTitle}.md`;
     fse.ensureFileSync(outFilePath);
     fse.writeFileSync(outFilePath, outBody);
@@ -39,18 +44,64 @@ function convert(filePath, target) {
   }
 }
 
+function addTitleToCategory({ title = '', categories = [] }) {
+  // 未分类
+  if (categories.length === 0 && title) {
+    uncategorized.push(title);
+    return;
+  }
+
+  categories.forEach(category => {
+    if (!catalogue[category]) {
+      catalogue[category] = [title]
+      return
+    }
+    catalogue[category].push(title);
+  });
+}
+
+/**
+ * 创建目录索引
+ * @param {string} targetPath 目标路径
+ */
+function createReadMeFile(targetPath) {
+  const readmePath = `${targetPath}/README.md`;
+  fse.ensureFileSync(readmePath);
+
+  let readmeContent = '## 分类\n';
+
+  let cats = ''; // 分类锚点
+  let allTitle = '';
+  const keys = Object.keys(catalogue);
+  if (uncategorized.length > 0) {
+    catalogue['未分类'] = uncategorized;
+    keys.push('未分类');
+  }
+  keys.forEach(ca => {
+    cats += `### [${ca}](#${ca})\n`;
+    let titles = '';
+
+    catalogue[ca].forEach(title => {
+      titles += `* #### [${title}](./${title}.md)\n`;
+    });
+    // 添加锚点目标分类 和 文章标题
+    allTitle += `### ${ca}\n` + titles;
+  });
+
+  readmeContent += cats + allTitle;
+  fse.writeFileSync(readmePath, readmeContent);
+}
+
 // 初始化
 init();
 
 const originPath = path.join(process.cwd(), program.origin);
 const targetPath = path.join(process.cwd(), program.target);
-console.log('originPath', originPath);
-console.log('targetPath', targetPath);
 
+// 遍历文件
 const readFiles = klawSync(originPath, {
   nodir: true,
   filter: ({ path }) => {
-    // 过滤目标路径
     if (new RegExp(targetPath).test(path)) {
       return;
     }
@@ -59,9 +110,14 @@ const readFiles = klawSync(originPath, {
   }
 });
 
+// 转换文件
 readFiles.forEach(({ path }) => {
   convert(path, targetPath);
 });
+
+createReadMeFile(targetPath);
+
+
 
 
 

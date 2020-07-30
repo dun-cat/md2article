@@ -1,14 +1,13 @@
 {
   "name": "md2article",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "把类似hugo或hexo等Markdown文件转化为，GitHub或社交平台发布的Markdown文章",
   "main": "index.js",
   "bin": {
     "md2article": "index.js"
   },
   "scripts": {
-    "start": "node index.js",
-    "pub": "npm publish"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
