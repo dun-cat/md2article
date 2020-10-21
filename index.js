@@ -107,6 +107,7 @@ const targetPath = path.join(process.cwd(), program.target);
 // 遍历文件
 const readFiles = klawSync(originPath, {
   nodir: true,
+  traverseAll: true,
   filter: ({ path }) => {
     if (new RegExp(targetPath).test(path)) {
       return;
