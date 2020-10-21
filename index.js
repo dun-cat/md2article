@@ -67,8 +67,8 @@ function addTitleToCategory({ title = '', categories = [] }) {
 function createReadMeFile(targetPath) {
   const readmePath = `${targetPath}/README.md`;
   fse.ensureFileSync(readmePath);
-
-  let readmeContent = '## 分类\n';
+  const header = `## 博客地址：[www.lumin.tech](http://www.lumin.tech)\n`;
+  let readmeContent = '### 目录\n';
 
   let cats = ''; // 分类锚点
   let allTitle = '';
@@ -94,7 +94,7 @@ function createReadMeFile(targetPath) {
   });
 
   readmeContent += cats + allTitle;
-  fse.writeFileSync(readmePath, readmeContent);
+  fse.writeFileSync(readmePath, header + readmeContent);
 }
 
 // -----------------------------------------------------------
