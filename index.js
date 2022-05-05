@@ -5,9 +5,12 @@ const fse = require('fs-extra');
 const klawSync = require('klaw-sync');
 const path = require('path');
 const fm = require('front-matter');
+const fs = require('fs');
 
 const catalogue = {};
 const uncategorized = [];
+
+const mdFileReg = /.+(\.md|\.MD|\.mD|\.Md)$/;
 
 /**
  * 初始化接收命令参数
@@ -29,6 +32,7 @@ function convert(filePath, target) {
     mdstr = fse.readFileSync(filePath).toString();
     const { body, attributes, frontmatter } = fm(mdstr);
     let outTitle = path.basename(filePath, path.extname(filePath));
+    const originalDir = path.dirname(filePath);
     let outBody = body;
     if (frontmatter) {
       outTitle = attributes.title;
@@ -36,14 +40,30 @@ function convert(filePath, target) {
     }
 
     addTitleToCategory(attributes);
-    const outFilePath = `${target}/${outTitle}.md`;
+    const targetDir = `${target}/${outTitle}`;
+    const outFilePath = `${targetDir}/index.md`;
     fse.ensureFileSync(outFilePath);
     fse.writeFileSync(outFilePath, outBody);
+
+    fs.cpSync(originalDir, targetDir, {
+      filter: (file) => {
+        if (fs.lstatSync(file).isDirectory()) return true;
+        if (!mdFileReg.test(file)) {
+          return true
+        }
+        return false
+      },
+      force: true,
+      recursive: true
+    })
   } catch (error) {
     console.error(error);
   }
 }
 
+/**
+ * 添加标题至分类
+ */
 function addTitleToCategory({ title = '', categories = [] }) {
   // 未分类
   if (categories.length === 0 && title) {
@@ -104,6 +124,8 @@ init();
 const originPath = path.join(process.cwd(), program.origin);
 const targetPath = path.join(process.cwd(), program.target);
 
+
+
 // 遍历文件
 const readFiles = klawSync(originPath, {
   nodir: true,
@@ -112,8 +134,7 @@ const readFiles = klawSync(originPath, {
     if (new RegExp(targetPath).test(path)) {
       return;
     }
-    const reg = /.+(\.md|\.MD|\.mD|\.Md)$/;
-    return reg.test(path);
+    return mdFileReg.test(path);
   }
 });
 
