@@ -46,16 +46,17 @@ function convert(filePath, target) {
     fse.writeFileSync(outFilePath, outBody);
 
     // 复制资源文件
-    fs.cpSync(originalDir, targetDir, {
+    fse.copySync(originalDir, targetDir, {
       filter: (file) => {
-        if (fs.lstatSync(file).isDirectory()) return true;
+        console.log(originalDir, file)
+        if (fs.lstatSync(file).isDirectory() && originalDir < file) return false;
         if (!mdFileReg.test(file)) {
           return true
         }
         return false
       },
       force: true,
-      recursive: true
+      // recursive: false
     })
   } catch (error) {
     console.error(error);
