@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/dun-cat/md2article/issues"
   },
+  "engines": {
+    "node": ">=16.8.0"
+  },
   "homepage": "https://github.com/dun-cat/md2article#readme",
   "dependencies": {
     "commander": "^6.0.0",
