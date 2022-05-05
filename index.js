@@ -45,6 +45,7 @@ function convert(filePath, target) {
     fse.ensureFileSync(outFilePath);
     fse.writeFileSync(outFilePath, outBody);
 
+    // 复制资源文件
     fs.cpSync(originalDir, targetDir, {
       filter: (file) => {
         if (fs.lstatSync(file).isDirectory()) return true;
@@ -107,7 +108,7 @@ function createReadMeFile(targetPath) {
     let titles = '';
 
     catalogue[ca].forEach(title => {
-      titles += `* #### [${title}](./${encodeURIComponent(title)}.md)\n`;
+      titles += `* #### [${title}](./${encodeURIComponent(title)}/index.md)\n`;
     });
     // 添加锚点目标分类 和 文章标题
     allTitle += `### ${ca}\n` + titles;
