@@ -1,6 +1,6 @@
 {
   "name": "md2article",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "把类似hugo或hexo等Markdown文件转化为，GitHub或社交平台发布的Markdown文章",
   "main": "index.js",
   "bin": {
