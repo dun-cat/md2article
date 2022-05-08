@@ -48,7 +48,6 @@ function convert(filePath, target) {
     // 复制资源文件
     fse.copySync(originalDir, targetDir, {
       filter: (file) => {
-        console.log(originalDir, file)
         if (fs.lstatSync(file).isDirectory() && originalDir < file) return false;
         if (!mdFileReg.test(file)) {
           return true
